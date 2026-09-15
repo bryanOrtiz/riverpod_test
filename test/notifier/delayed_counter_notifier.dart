@@ -1,6 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 
-final delayedCounterNotifierProvider = NotifierProvider<DelayedCounterNotifier, int>(DelayedCounterNotifier.new);
+final delayedCounterNotifierProvider =
+    NotifierProvider<DelayedCounterNotifier, int>(DelayedCounterNotifier.new);
 
 class DelayedCounterNotifier extends Notifier<int> {
   @override

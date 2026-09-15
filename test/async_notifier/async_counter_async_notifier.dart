@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:riverpod/riverpod.dart';
 
-final asyncCounterAsyncNotifierProvider = AsyncNotifierProvider<AsyncCounterAsyncNotifier, int>(
+final asyncCounterAsyncNotifierProvider =
+    AsyncNotifierProvider<AsyncCounterAsyncNotifier, int>(
   AsyncCounterAsyncNotifier.new,
 );
 

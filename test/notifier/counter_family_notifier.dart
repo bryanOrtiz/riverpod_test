@@ -1,6 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 
-final counterFamilyNotifierProvider = NotifierProvider.family<CounterFamilyNotifier, int, int>(
+final counterFamilyNotifierProvider =
+    NotifierProvider.family<CounterFamilyNotifier, int, int>(
   CounterFamilyNotifier.new,
 );
 

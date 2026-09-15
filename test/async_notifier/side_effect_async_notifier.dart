@@ -5,7 +5,8 @@ import '../provider/provider.dart';
 import 'async_notifier.dart';
 
 final sideEffectAsyncNotifierProvider =
-    AsyncNotifierProvider.family<SideEffectAsyncNotifier, int, int>(SideEffectAsyncNotifier.new);
+    AsyncNotifierProvider.family<SideEffectAsyncNotifier, int, int>(
+        SideEffectAsyncNotifier.new);
 
 class SideEffectAsyncNotifier extends AsyncNotifier<int> {
   SideEffectAsyncNotifier(this.initialValue);
@@ -23,5 +24,6 @@ class SideEffectAsyncNotifier extends AsyncNotifier<int> {
     state = AsyncData(value + 1);
   }
 
-  void incrementByRepository() => state = AsyncData(repository.incrementCounter());
+  void incrementByRepository() =>
+      state = AsyncData(repository.incrementCounter());
 }

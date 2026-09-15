@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:riverpod/riverpod.dart';
 
-import 'async_notifier.dart';
+import '../async_notifier/async_notifier_int_value_extension.dart';
 
 final errorCountStreamNotifierProvider =
     StreamNotifierProvider<ErrorCountStreamNotifier, int>(

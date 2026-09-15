@@ -1,7 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 
-final counterAutoDisposeFamilyNotifierProvider =
-    NotifierProvider.autoDispose.family<CounterAutoDisposeFamilyNotifier, int, int>(
+final counterAutoDisposeFamilyNotifierProvider = NotifierProvider.autoDispose
+    .family<CounterAutoDisposeFamilyNotifier, int, int>(
   (intialValue) => CounterAutoDisposeFamilyNotifier(intialValue),
 );
 

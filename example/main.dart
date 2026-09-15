@@ -24,7 +24,8 @@ void mainNotifier() {
     providerTest(
       'expect [1] when increment is called',
       provider: counterNotifierProvider,
-      act: (container) => container.read(counterNotifierProvider.notifier).increment(),
+      act: (container) =>
+          container.read(counterNotifierProvider.notifier).increment(),
       expect: () => const <int>[1],
     );
 
@@ -33,10 +34,12 @@ void mainNotifier() {
       provider: counterAsyncNotifierProvider(0),
       containerBuilder: () => ProviderContainer(
         overrides: [
-          counterAsyncNotifierProvider(0).overrideWith(() => CounterAsyncNotifier(1)),
+          counterAsyncNotifierProvider(0)
+              .overrideWith(() => CounterAsyncNotifier(1)),
         ],
       ),
-      act: (container) => container.read(counterAsyncNotifierProvider(0).notifier).increment(),
+      act: (container) =>
+          container.read(counterAsyncNotifierProvider(0).notifier).increment(),
       expect: () => [const AsyncData(2)],
     );
 
@@ -45,10 +48,12 @@ void mainNotifier() {
       provider: counterStreamNotifierProvider(0),
       containerBuilder: () => ProviderContainer(
         overrides: [
-          counterStreamNotifierProvider(0).overrideWith(() => CounterStreamNotifier(1)),
+          counterStreamNotifierProvider(0)
+              .overrideWith(() => CounterStreamNotifier(1)),
         ],
       ),
-      act: (container) => container.read(counterStreamNotifierProvider(0).notifier).increment(),
+      act: (container) =>
+          container.read(counterStreamNotifierProvider(0).notifier).increment(),
       expect: () => [const AsyncData(2)],
     );
   });
@@ -56,13 +61,16 @@ void mainNotifier() {
 
 final counterProvider = Provider<int>((ref) => 0);
 
-final counterNotifierProvider = NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
+final counterNotifierProvider =
+    NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
 
 final counterAsyncNotifierProvider =
-    AsyncNotifierProvider.family<CounterAsyncNotifier, int, int>(CounterAsyncNotifier.new);
+    AsyncNotifierProvider.family<CounterAsyncNotifier, int, int>(
+        CounterAsyncNotifier.new);
 
 final counterStreamNotifierProvider =
-    StreamNotifierProvider.family<CounterStreamNotifier, int, int>(CounterStreamNotifier.new);
+    StreamNotifierProvider.family<CounterStreamNotifier, int, int>(
+        CounterStreamNotifier.new);
 
 class CounterNotifier extends Notifier<int> {
   @override

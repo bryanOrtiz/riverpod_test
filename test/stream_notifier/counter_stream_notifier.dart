@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:riverpod/riverpod.dart';
 
-import 'async_notifier.dart';
+import '../async_notifier/async_notifier_int_value_extension.dart';
 
 final counterStreamNotifierProvider =
-    StreamNotifierProvider.family<CounterStreamNotifier, int, int>(CounterStreamNotifier.new);
+    StreamNotifierProvider.family<CounterStreamNotifier, int, int>(
+        CounterStreamNotifier.new);
 
 class CounterStreamNotifier extends StreamNotifier<int> {
   CounterStreamNotifier(this.initialValue);

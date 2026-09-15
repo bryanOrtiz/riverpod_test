@@ -4,7 +4,8 @@ import 'package:riverpod/riverpod.dart';
 import 'async_notifier.dart';
 
 final counterAsyncNotifierProvider =
-    AsyncNotifierProvider.family<CounterAsyncNotifier, int, int>(CounterAsyncNotifier.new);
+    AsyncNotifierProvider.family<CounterAsyncNotifier, int, int>(
+        CounterAsyncNotifier.new);
 
 class CounterAsyncNotifier extends AsyncNotifier<int> {
   CounterAsyncNotifier(this.initialValue);

@@ -1,6 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 
-final counterAutoDisposeNotifierProvider = NotifierProvider.autoDispose<CounterAutoDisposeNotifier, int>(
+final counterAutoDisposeNotifierProvider =
+    NotifierProvider.autoDispose<CounterAutoDisposeNotifier, int>(
   CounterAutoDisposeNotifier.new,
 );
 

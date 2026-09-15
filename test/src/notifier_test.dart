@@ -19,7 +19,8 @@ void main() {
       providerTest(
         'expect [1] when increment is called',
         provider: counterNotifierProvider,
-        act: (container) => container.read(counterNotifierProvider.notifier).increment(),
+        act: (container) =>
+            container.read(counterNotifierProvider.notifier).increment(),
         expect: () => <int>[1],
       );
 
@@ -42,7 +43,8 @@ void main() {
             initialCounterProvider.overrideWithValue(2),
           ],
         ),
-        act: (container) => container.read(counterNotifierProvider.notifier).increment(),
+        act: (container) =>
+            container.read(counterNotifierProvider.notifier).increment(),
         expect: () => <int>[3],
       );
 
@@ -110,7 +112,8 @@ void main() {
       providerTest(
         'expect [1] when increment is called',
         provider: asyncCounterNotifierProvider,
-        act: (container) => container.read(asyncCounterNotifierProvider.notifier).increment(),
+        act: (container) =>
+            container.read(asyncCounterNotifierProvider.notifier).increment(),
         expect: () => <int>[1],
       );
 
@@ -119,8 +122,12 @@ void main() {
         'times with async act',
         provider: asyncCounterNotifierProvider,
         act: (container) async {
-          await container.read(asyncCounterNotifierProvider.notifier).increment();
-          await container.read(asyncCounterNotifierProvider.notifier).increment();
+          await container
+              .read(asyncCounterNotifierProvider.notifier)
+              .increment();
+          await container
+              .read(asyncCounterNotifierProvider.notifier)
+              .increment();
         },
         expect: () => <int>[1, 2],
       );
@@ -136,14 +143,16 @@ void main() {
       providerTest(
         'expect [] when increment is called without wait',
         provider: delayedCounterNotifierProvider,
-        act: (container) => container.read(delayedCounterNotifierProvider.notifier).increment(),
+        act: (container) =>
+            container.read(delayedCounterNotifierProvider.notifier).increment(),
         expect: () => <int>[],
       );
 
       providerTest(
         'expect [1] when increment is called with wait',
         provider: delayedCounterNotifierProvider,
-        act: (container) => container.read(delayedCounterNotifierProvider.notifier).increment(),
+        act: (container) =>
+            container.read(delayedCounterNotifierProvider.notifier).increment(),
         wait: const Duration(milliseconds: 300),
         expect: () => <int>[1],
       );
@@ -159,7 +168,8 @@ void main() {
       providerTest(
         'expect [1, 2] when increment is called',
         provider: multiCounterNotifierProvider,
-        act: (container) => container.read(multiCounterNotifierProvider.notifier).increment(),
+        act: (container) =>
+            container.read(multiCounterNotifierProvider.notifier).increment(),
         expect: () => <int>[1, 2],
       );
 
@@ -185,7 +195,8 @@ void main() {
       providerTest(
         'expect [ComplexStateB] when emitB is called',
         provider: complexNotifierProvider,
-        act: (container) => container.read(complexNotifierProvider.notifier).setComplexStateB(),
+        act: (container) =>
+            container.read(complexNotifierProvider.notifier).setComplexStateB(),
         expect: () => [isA<ComplexStateB>()],
       );
     });
@@ -216,7 +227,9 @@ void main() {
         setUp: () => when(repository.incrementCounter).thenReturn(10),
         provider: sideEffectCounterNotifierProvider,
         containerBuilder: createContainer,
-        act: (container) => container.read(sideEffectCounterNotifierProvider.notifier).incrementByRepository(),
+        act: (container) => container
+            .read(sideEffectCounterNotifierProvider.notifier)
+            .incrementByRepository(),
         expect: () => <int>[10],
         verify: (_) => verify(repository.incrementCounter).called(1),
       );
@@ -225,7 +238,9 @@ void main() {
         'does not require an expect',
         provider: sideEffectCounterNotifierProvider,
         containerBuilder: createContainer,
-        act: (container) => container.read(sideEffectCounterNotifierProvider.notifier).increment(),
+        act: (container) => container
+            .read(sideEffectCounterNotifierProvider.notifier)
+            .increment(),
         verify: (_) => verify(repository.sideEffect).called(1),
       );
 
@@ -272,7 +287,9 @@ void main() {
       providerTest(
         'expect [1] when increment is called',
         provider: counterAutoDisposeNotifierProvider,
-        act: (container) => container.read(counterAutoDisposeNotifierProvider.notifier).increment(),
+        act: (container) => container
+            .read(counterAutoDisposeNotifierProvider.notifier)
+            .increment(),
         expect: () => <int>[1],
       );
 
@@ -298,7 +315,9 @@ void main() {
       providerTest(
         'expect [1] when increment is called',
         provider: counterFamilyNotifierProvider(0),
-        act: (container) => container.read(counterFamilyNotifierProvider(0).notifier).increment(),
+        act: (container) => container
+            .read(counterFamilyNotifierProvider(0).notifier)
+            .increment(),
         expect: () => <int>[1],
       );
 
@@ -324,7 +343,9 @@ void main() {
       providerTest(
         'expect [1] when increment is called',
         provider: counterAutoDisposeFamilyNotifierProvider(0),
-        act: (container) => container.read(counterAutoDisposeFamilyNotifierProvider(0).notifier).increment(),
+        act: (container) => container
+            .read(counterAutoDisposeFamilyNotifierProvider(0).notifier)
+            .increment(),
         expect: () => <int>[1],
       );
 

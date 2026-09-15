@@ -3,7 +3,8 @@ import 'package:riverpod/riverpod.dart';
 
 import 'async_notifier.dart';
 
-final debounceCounterAsyncNotifierProvider = AsyncNotifierProvider<DebounceCounterNotifier, int>(
+final debounceCounterAsyncNotifierProvider =
+    AsyncNotifierProvider<DebounceCounterNotifier, int>(
   DebounceCounterNotifier.new,
 );
 

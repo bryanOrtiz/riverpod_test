@@ -29,31 +29,41 @@ dart pub add --dev riverpod_test
 
 ## Usage
 
-`testProvider`
+The package exposes a single generic test helper, `providerTest`, which works
+with any provider that can be listened to by a `ProviderContainer` —
+`Provider`, `Notifier`, `AsyncNotifier`, `StreamNotifier`, `FutureProvider`,
+`StreamProvider`, and their `family`/`autoDispose` variants.
+
+### `Provider`
 
 ```dart
-import 'package:riverpod_test.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_test/riverpod_test.dart';
 
-testProvider(
-  'expect [0]',
-  provider: counterProvider,
-  expect: () => [0],
-);
+void main() {
+  providerTest(
+    'expect [0]',
+    provider: counterProvider,
+    emitInitialState: true,
+    expect: () => [0],
+  );
+}
 
 final counterProvider = Provider<int>((ref) => 0);
 ```
 
-`testNotifier`
+### `Notifier`
 
 ```dart
-testNotifier(
-  'expect [2] when increment is called twice and skip: 1',
+providerTest(
+  'expect [1, 2] when increment is called twice',
   provider: counterNotifierProvider,
-  act: (notifier) => notifier
+  act: (container) {
+    container.read(counterNotifierProvider.notifier)
       ..increment()
-      ..increment(),
-  skip: 1,
-  expect: () => [2],
+      ..increment();
+  },
+  expect: () => [1, 2],
 );
 
 final counterNotifierProvider =
@@ -65,103 +75,80 @@ class CounterNotifier extends Notifier<int> {
 
   void increment() => state++;
 }
-
 ```
 
-`testAsyncNotifier` (also handles `StreamNotifier`)
+### `AsyncNotifier` (also works for `StreamNotifier` and `FutureProvider`)
 
 ```dart
-testAsyncNotifier<CounterAsyncNotifier, int>(
-  'expect [AsyncData(1)] when call increment',
+providerTest(
+  'expect [AsyncData(1)] when increment is called',
   provider: counterAsyncNotifierProvider(0),
-  act: (notifier) => notifier.increment(),
+  act: (container) =>
+      container.read(counterAsyncNotifierProvider(0).notifier).increment(),
   expect: () => <AsyncValue<int>>[const AsyncData(1)],
 );
 
-testAsyncNotifier(
-  'verify if mockRepository sideEffect is called',
-  provider: sideEffectAsyncNotifierProvider(1),
-  overrides: [repositoryProvider.overrideWithValue(mockRepository)],
-  act: (notifier) => notifier.increment(),
-  verify: (_) => verify(mockRepository.sideEffect).called(1),
-);
-
 final counterAsyncNotifierProvider =
-    AsyncNotifierProviderFamily<CounterAsyncNotifier, int, int>(
+    AsyncNotifierProvider.family<CounterAsyncNotifier, int, int>(
   CounterAsyncNotifier.new,
 );
 
-class CounterAsyncNotifier extends FamilyAsyncNotifier<int, int> {
+class CounterAsyncNotifier extends AsyncNotifier<int> {
+  CounterAsyncNotifier(this.initialValue);
+
+  final int initialValue;
+
   @override
-  FutureOr<int> build(int initialValue) => initialValue;
+  FutureOr<int> build() => initialValue;
 
-  void increment() => state = AsyncData(value + 1);
-}
-
-class MockRepository extends Mock implements Repository {}
-
-final sideEffectAsyncNotifierProvider =
-    AsyncNotifierProviderFamily<SideEffectAsyncNotifier, int, int>(
-  SideEffectAsyncNotifier.new,
-);
-
-class SideEffectAsyncNotifier extends FamilyAsyncNotifier<int, int> {
-  @override
-  FutureOr<int> build(int initialValue) => initialValue;
-
-  Repository get repository => ref.watch(repositoryProvider);
-
-  void increment() {
-    repository.sideEffect();
-    state = AsyncData(value + 1);
-  }
+  void increment() => state = AsyncData(state.value! + 1);
 }
 ```
 
-`testResultProvider`
+### Overriding providers and verifying mocks
+
+`providerTest`'s `containerBuilder` replaces the old `overrides` parameter —
+it lets you build a `ProviderContainer` with whatever overrides your test
+needs, and `verify` runs afterward with that same container.
 
 ```dart
-testResultProvider<Repository>(
-  'expect [1] when incrementCounter is called',
-  provider: repositoryProvider,
-  act: (result) => result.incrementCounter(),
-  expect: () => [1],
+providerTest(
+  'verifies sideEffect is called when increment is called',
+  provider: sideEffectAsyncNotifierProvider(1),
+  containerBuilder: () => ProviderContainer.test(
+    overrides: [repositoryProvider.overrideWithValue(mockRepository)],
+  ),
+  act: (container) =>
+      container.read(sideEffectAsyncNotifierProvider(1).notifier).increment(),
+  verify: (_) => verify(mockRepository.sideEffect).called(1),
 );
 
 final repositoryProvider = Provider<Repository>((ref) => Repository());
 
 class Repository {
-  int incrementCounter() => 1;
+  void sideEffect() {}
 }
 
-```
+class MockRepository extends Mock implements Repository {}
 
-`testStateNotifier`
-
-```dart
-testStateNotifier<CounterStateNotifier, int>(
-  'expect [0] when decrement is called and seed: 1',
-  provider: counterStateNotifierProvider,
-  act: (notifier) => notifier.decrement(),
-  seed: 1,
-  wait: const Duration(milliseconds: 100),
-  expect: () => <int>[0],
+final sideEffectAsyncNotifierProvider =
+    AsyncNotifierProvider.family<SideEffectAsyncNotifier, int, int>(
+  SideEffectAsyncNotifier.new,
 );
 
-final counterStateNotifierProvider =
-    StateNotifierProvider<CounterStateNotifier, int>(
-  (ref) => CounterStateNotifier(),
-);
+class SideEffectAsyncNotifier extends AsyncNotifier<int> {
+  SideEffectAsyncNotifier(this.initialValue);
 
-class CounterStateNotifier extends StateNotifier<int> {
-  CounterStateNotifier() : super(0);
+  final int initialValue;
 
-  void increment() => state++;
+  Repository get repository => ref.watch(repositoryProvider);
 
-  Future<void> decrement() async {
-    await Future<void>.delayed(const Duration(milliseconds: 100));
-    state--;
+  @override
+  FutureOr<int> build() => initialValue;
+
+  void increment() {
+    repository.sideEffect();
+    state = AsyncData(state.value! + 1);
   }
 }
-
 ```

@@ -20,28 +20,6 @@ void main() {
         provider: familyCounterProvider(5),
         expect: () => <int>[],
       );
-
-      // test('fails immediately when expectation is incorrect', () async {
-      //   const expectedError = 'Expected: [1]\n'
-      //       '  Actual: [0]\n'
-      //       '   Which: at location [0] is <0> instead of <1>\n'
-      //       '\n'
-      //       '==== diff ========================================\n'
-      //       '\n'
-      //       // ignore: lines_longer_than_80_chars
-      //       '\x1B[90m[\x1B[0m\x1B[31m[-1-]\x1B[0m\x1B[32m{+0+}\x1B[0m\x1B[90m]\x1B[0m\n'
-      //       '\n'
-      //       '==== end diff ====================================\n';
-      //   try {
-      //     await providerTest<int>(
-      //       provider: counterProvider,
-      //       expect: () => <int>[1],
-      //       errors: Exception.new,
-      //     );
-      //   } catch (e) {
-      //     expect((e as TestFailure).message, expectedError);
-      //   }
-      // });
     });
 
     group('futureProvider', () {
@@ -58,6 +36,9 @@ void main() {
               mockRepository,
             ),
           ],
+          // Fail immediately instead of retrying, so errors surface as
+          // AsyncError right away.
+          retry: (retryCount, error) => null,
         );
       }
 
@@ -65,7 +46,8 @@ void main() {
         'expect [AsyncLoading(), AsyncData(1)]',
         provider: futureProvider,
         containerBuilder: createContainer,
-        setUp: () => when(mockRepository.fetchCounter).thenAnswer((_) async => 1),
+        setUp: () =>
+            when(mockRepository.fetchCounter).thenAnswer((_) async => 1),
         expect: () => <AsyncValue<int>>[
           const AsyncData(1),
         ],
@@ -75,7 +57,8 @@ void main() {
         'expect [AsyncLoading(), AsyncData([])]',
         provider: futureListProvider,
         containerBuilder: createContainer,
-        setUp: () => when(mockRepository.fetchCounterList).thenAnswer((_) async => []),
+        setUp: () =>
+            when(mockRepository.fetchCounterList).thenAnswer((_) async => []),
         expect: () => <AsyncValue<List<int>>>[
           const AsyncData([]),
         ],
@@ -88,6 +71,19 @@ void main() {
         wait: const Duration(milliseconds: 100),
         expect: () => <AsyncValue<int>>[
           const AsyncData(10),
+        ],
+      );
+
+      final exception = Exception('oops');
+
+      providerTest(
+        'expect [AsyncError(exception)] when repository throws',
+        provider: futureProvider,
+        containerBuilder: createContainer,
+        setUp: () => when(mockRepository.fetchCounter)
+            .thenAnswer((_) async => throw exception),
+        expect: () => <AsyncValue<int>>[
+          AsyncError<int>(exception, StackTrace.empty),
         ],
       );
 

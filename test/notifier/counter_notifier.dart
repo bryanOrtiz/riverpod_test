@@ -4,7 +4,8 @@ final initialCounterProvider = Provider<int>(
   (ref) => 0,
 );
 
-final counterNotifierProvider = NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
+final counterNotifierProvider =
+    NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
 
 class CounterNotifier extends Notifier<int> {
   @override
