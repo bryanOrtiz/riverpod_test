@@ -1,11 +1,14 @@
 import 'package:riverpod/riverpod.dart';
 
-final counterNotifierProvider =
-    NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
+final initialCounterProvider = Provider<int>(
+  (ref) => 0,
+);
+
+final counterNotifierProvider = NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
 
 class CounterNotifier extends Notifier<int> {
   @override
-  int build() => 0;
+  int build() => ref.watch(initialCounterProvider);
 
   void increment() => state++;
 }

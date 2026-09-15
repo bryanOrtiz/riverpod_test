@@ -7,6 +7,5 @@ export 'list_async_notifier.dart';
 export 'debounce_counter_notifier.dart';
 export 'error_count_notifier.dart';
 export 'error_count_stream_notifier.dart';
-export 'exception_async_notifier.dart';
 export 'multi_counter_async_notifier.dart';
 export 'side_effect_async_notifier.dart';

@@ -1,109 +1,68 @@
 import 'dart:async';
 
-import 'package:mocktail/mocktail.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_test/riverpod_test.dart';
 import 'package:test/test.dart';
 
-class MockRepository extends Mock implements Repository {}
-
 void main() {
   mainProvider();
   mainNotifier();
-  mainResultProvider();
-  mainStateNotifier();
 }
 
 void mainProvider() {
   group('counterProvider', () {
-    testProvider<int>(
-      'expect [0]',
+    providerTest(
+      'expect []',
       provider: counterProvider,
-      expect: () => const <int>[0],
-    );
-  });
-
-  group('counterRepositoryProvider', () {
-    final mockRepository = MockRepository();
-
-    testProvider<int>(
-      'expect [5] from repository',
-      overrides: [repositoryProvider.overrideWithValue(mockRepository)],
-      setUp: () => when(mockRepository.incrementCounter).thenReturn(5),
-      provider: counterRepositoryProvider,
-      expect: () => const <int>[5],
+      expect: () => const <int>[],
     );
   });
 }
 
 void mainNotifier() {
   group('counterNotifierProvider', () {
-    testNotifier<CounterNotifier, int>(
+    providerTest(
       'expect [1] when increment is called',
       provider: counterNotifierProvider,
-      act: (notifier) => notifier.increment(),
+      act: (container) => container.read(counterNotifierProvider.notifier).increment(),
       expect: () => const <int>[1],
     );
 
-    testAsyncNotifier<CounterAsyncNotifier, int>(
+    providerTest(
       'expect [AsyncData(2)] when increment is called with seed: AsyncData(1)',
-      provider: counterAsyncNotifierProvider,
-      seed: const AsyncData(1),
-      act: (notifier) => notifier.increment(),
+      provider: counterAsyncNotifierProvider(0),
+      containerBuilder: () => ProviderContainer(
+        overrides: [
+          counterAsyncNotifierProvider(0).overrideWith(() => CounterAsyncNotifier(1)),
+        ],
+      ),
+      act: (container) => container.read(counterAsyncNotifierProvider(0).notifier).increment(),
       expect: () => [const AsyncData(2)],
     );
 
-    testAsyncNotifier<CounterStreamNotifier, int>(
+    providerTest(
       'expect [AsyncData(2)] when increment is called with seed: AsyncData(1)',
-      provider: counterStreamNotifierProvider,
-      seed: const AsyncData(1),
-      act: (notifier) => notifier.increment(),
+      provider: counterStreamNotifierProvider(0),
+      containerBuilder: () => ProviderContainer(
+        overrides: [
+          counterStreamNotifierProvider(0).overrideWith(() => CounterStreamNotifier(1)),
+        ],
+      ),
+      act: (container) => container.read(counterStreamNotifierProvider(0).notifier).increment(),
       expect: () => [const AsyncData(2)],
     );
   });
 }
 
-void mainResultProvider() {
-  testResultProvider<Repository>(
-    'expect [1] when incrementCounter is called',
-    provider: repositoryProvider,
-    act: (result) => result.incrementCounter(),
-    expect: () => [1],
-  );
-}
-
-void mainStateNotifier() {
-  testStateNotifier(
-    'expect [1, 2] when increment is called twice',
-    provider: counterStateNotifierProvider,
-    act: (notifier) => notifier
-      ..increment()
-      ..increment(),
-    expect: () => [1, 2],
-  );
-}
-
 final counterProvider = Provider<int>((ref) => 0);
 
-final counterRepositoryProvider =
-    Provider<int>((ref) => ref.watch(repositoryProvider).incrementCounter());
-
-final counterNotifierProvider =
-    NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
+final counterNotifierProvider = NotifierProvider<CounterNotifier, int>(CounterNotifier.new);
 
 final counterAsyncNotifierProvider =
-    AsyncNotifierProvider<CounterAsyncNotifier, int>(CounterAsyncNotifier.new);
+    AsyncNotifierProvider.family<CounterAsyncNotifier, int, int>(CounterAsyncNotifier.new);
 
 final counterStreamNotifierProvider =
-    StreamNotifierProvider<CounterStreamNotifier, int>(
-        CounterStreamNotifier.new);
-
-final repositoryProvider = Provider<Repository>((ref) => Repository());
-
-final counterStateNotifierProvider =
-    StateNotifierProvider<CounterStateNotifier, int>(
-  (ref) => CounterStateNotifier(),
-);
+    StreamNotifierProvider.family<CounterStreamNotifier, int, int>(CounterStreamNotifier.new);
 
 class CounterNotifier extends Notifier<int> {
   @override
@@ -113,27 +72,43 @@ class CounterNotifier extends Notifier<int> {
 }
 
 class CounterAsyncNotifier extends AsyncNotifier<int> {
+  CounterAsyncNotifier(this.initialValue);
+  final int initialValue;
   @override
-  FutureOr<int> build() => 0;
-
-  void increment() => state = AsyncData(state.value! + 1);
-}
-
-class CounterStreamNotifier extends StreamNotifier<int> {
-  @override
-  Stream<int> build() async* {
-    yield 0;
+  FutureOr<int> build() {
+    return initialValue;
   }
 
   void increment() => state = AsyncData(state.value! + 1);
 }
 
-class Repository {
-  int incrementCounter() => 1;
-}
+class CounterStreamNotifier extends StreamNotifier<int> {
+  CounterStreamNotifier(this.initialValue);
 
-class CounterStateNotifier extends StateNotifier<int> {
-  CounterStateNotifier() : super(0);
+  final int initialValue;
 
-  void increment() => state++;
+  late final StreamController<int> _controller;
+  late int _count;
+
+  @override
+  Stream<int> build() {
+    _count = initialValue;
+    _controller = StreamController<int>();
+
+    ref.onDispose(() {
+      _controller.close();
+    });
+
+    scheduleMicrotask(() {
+      _controller.add(_count);
+    });
+
+    return _controller.stream;
+  }
+
+  void increment() {
+    _count++;
+
+    _controller.add(_count);
+  }
 }

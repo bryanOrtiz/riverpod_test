@@ -1,15 +1,15 @@
 import 'package:riverpod/riverpod.dart';
 
 final counterAutoDisposeFamilyNotifierProvider =
-    AutoDisposeNotifierProviderFamily<CounterAutoDisposeFamilyNotifier, int,
-        int>(
-  CounterAutoDisposeFamilyNotifier.new,
+    NotifierProvider.autoDispose.family<CounterAutoDisposeFamilyNotifier, int, int>(
+  (intialValue) => CounterAutoDisposeFamilyNotifier(intialValue),
 );
 
-class CounterAutoDisposeFamilyNotifier
-    extends AutoDisposeFamilyNotifier<int, int> {
+class CounterAutoDisposeFamilyNotifier extends Notifier<int> {
+  CounterAutoDisposeFamilyNotifier(this.initialValue);
+  final int initialValue;
   @override
-  int build(int initialValue) => initialValue;
+  int build() => initialValue;
 
   void increment() => state++;
 }

@@ -1,13 +1,14 @@
 import 'package:riverpod/riverpod.dart';
 
-final counterFamilyNotifierProvider =
-    NotifierProviderFamily<CounterFamilyNotifier, int, int>(
+final counterFamilyNotifierProvider = NotifierProvider.family<CounterFamilyNotifier, int, int>(
   CounterFamilyNotifier.new,
 );
 
-class CounterFamilyNotifier extends FamilyNotifier<int, int> {
+class CounterFamilyNotifier extends Notifier<int> {
+  CounterFamilyNotifier(this.initialValue);
+  final int initialValue;
   @override
-  int build(int initialValue) => initialValue;
+  int build() => initialValue;
 
   void increment() => state++;
 }
