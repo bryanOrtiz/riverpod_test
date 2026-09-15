@@ -47,59 +47,6 @@ void main() {
             container.read(counterNotifierProvider.notifier).increment(),
         expect: () => <int>[3],
       );
-
-      // test('fails immediately when expectation is incorrect', () async {
-      //   const expectedError = 'Expected: [2]\n'
-      //       '  Actual: [1]\n'
-      //       '   Which: at location [0] is <1> instead of <2>\n'
-      //       '\n'
-      //       '==== diff ========================================\n'
-      //       '\n'
-      //       // ignore: lines_longer_than_80_chars
-      //       '\x1B[90m[\x1B[0m\x1B[31m[-2-]\x1B[0m\x1B[32m{+1+}\x1B[0m\x1B[90m]\x1B[0m\n'
-      //       '\n'
-      //       '==== end diff ====================================\n';
-      //   try {
-      //     await notifierTest<CounterNotifier, int>(
-      //       provider: counterNotifierProvider,
-      //       act: (notifier) => notifier.increment(),
-      //       expect: () => <int>[2],
-      //       errors: Exception.new,
-      //     );
-      //   } catch (e) {
-      //     expect((e as TestFailure).message, expectedError);
-      //   }
-      // });
-
-      // test(
-      //   'fails immediately when '
-      //   'uncaught exception occurs within notifier',
-      //   () async {
-      //     try {
-      //       await notifierTest<ErrorCounterNotifier, int>(
-      //         provider: errorNotifierProvider,
-      //         act: (notifier) => notifier.increment(),
-      //         expect: () => <int>[1],
-      //       );
-      //     } catch (e) {
-      //       expect(e, isA<CounterNotifierError>());
-      //     }
-      //   },
-      // );
-
-      // test('fails immediately when exception occurs in act', () async {
-      //   final exception = Exception('oops');
-
-      //   try {
-      //     await notifierTest<ErrorCounterNotifier, int>(
-      //       provider: errorNotifierProvider,
-      //       act: (_) => throw exception,
-      //       expect: () => [1],
-      //     );
-      //   } catch (e) {
-      //     expect(e, equals(exception));
-      //   }
-      // });
     });
 
     group('AsyncCounterNotifier', () {
@@ -243,38 +190,6 @@ void main() {
             .increment(),
         verify: (_) => verify(repository.sideEffect).called(1),
       );
-
-//       test('fails immediately when verify is incorrect', () async {
-//         const expectedError = '''Expected: <2>\n  Actual: <1>\nUnexpected number of calls\n''';
-//         try {
-//           await notifierTest<int>(
-//             provider: sideEffectCounterNotifierProvider,
-//             overrides: overrides,
-//             act: (notifier) => notifier.increment(),
-//             verify: (_) => verify(repository.sideEffect).called(2),
-//             tearDown: overrides.clear,
-//           );
-//         } catch (e) {
-//           expect((e as TestFailure).message, expectedError);
-//         }
-//       });
-
-//       test('shows equality warning when strings are identical', () async {
-//         const expectedError = '''Expected: [Instance of 'ComplexStateA']
-//   Actual: [Instance of 'ComplexStateA']
-//    Which: at location [0] is <Instance of 'ComplexStateA'> instead of <Instance of 'ComplexStateA'>\n
-// WARNING: Please ensure state instances extend Equatable, override == and hashCode, or implement Comparable.
-// Alternatively, consider using Matchers in the expect of the providerTest rather than concrete state instances.\n''';
-//         try {
-//           await notifierTest<ComplexState>(
-//             provider: complexNotifierProvider,
-//             act: (notifier) => notifier.setComplexStateA(),
-//             expect: () => <ComplexState>[ComplexStateA()],
-//           );
-//         } catch (e) {
-//           expect((e as TestFailure).message, expectedError);
-//         }
-//       });
     });
 
     group('CounterAutoDisposeNotifier', () {

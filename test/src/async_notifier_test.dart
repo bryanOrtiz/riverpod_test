@@ -101,61 +101,6 @@ void main() {
         skip: 1,
         expect: () => <AsyncValue<int>>[const AsyncData(2)],
       );
-
-      // test('fails immediately when expectation is incorrect', () async {
-      //   const expectedError = 'Expected: [AsyncData<int>:AsyncData<int>(value: 2)]\n'
-      //       '  Actual: [AsyncData<int>:AsyncData<int>(value: 1)]\n'
-      //       '   Which: at location [0] is '
-      //       'AsyncData<int>:<AsyncData<int>(value: 1)> instead of '
-      //       'AsyncData<int>:<AsyncData<int>(value: 2)>\n'
-      //       '\n'
-      //       '==== diff ========================================\n'
-      //       '\n'
-      //       '\x1B[90m[AsyncData<int>(value: '
-      //       '\x1B[0m\x1B[31m[-2-]\x1B[0m\x1B[32m{+1+}\x1B[0m\x1B[90m)]\x1B[0m\n'
-      //       '\n'
-      //       '==== end diff ====================================\n';
-      //   try {
-      //     await asyncNotifierTest<int>(
-      //       provider: counterAsyncNotifierProvider(0),
-      //       act: (container) => container.read(counterAsyncNotifierProvider(0).notifier).increment(),
-      //       expect: () => <AsyncValue<int>>[const AsyncData<int>(2)],
-      //       errors: Exception.new,
-      //     );
-      //   } catch (e) {
-      //     expect((e as TestFailure).message, expectedError);
-      //   }
-      // });
-
-      // test(
-      //   'fails immediately when '
-      //   'uncaught exception occurs within notifier',
-      //   () async {
-      //     try {
-      //       await asyncNotifierTest<int>(
-      //         provider: errorCountAsyncNotifierProvider,
-      //         act: (container) => container.read(errorCountAsyncNotifierProvider.notifier).increment(),
-      //         expect: () => <AsyncValue<int>>[const AsyncData<int>(1)],
-      //       );
-      //     } catch (e) {
-      //       expect(e, isA<ErrorCounterNotifierError>());
-      //     }
-      //   },
-      // );
-
-      // test('fails immediately when exception occurs in act', () async {
-      //   final exception = Exception('oops');
-
-      //   try {
-      //     await asyncNotifierTest<int>(
-      //       provider: errorCountAsyncNotifierProvider,
-      //       act: (_) => throw exception,
-      //       expect: () => [const AsyncData<int>(1)],
-      //     );
-      //   } catch (e) {
-      //     expect(e, equals(exception));
-      //   }
-      // });
     });
 
     group('ErrorBuildAsyncNotifier', () {
@@ -343,42 +288,6 @@ void main() {
             .incrementByRepository(),
         expect: () => <AsyncValue<int>>[const AsyncData(10)],
       );
-
-//       test('fails immediately when verify is incorrect', () async {
-//         const expectedError = '''Expected: <2>\n  Actual: <1>\nUnexpected number of calls\n''';
-//         try {
-//           await asyncNotifierTest<int>(
-//             provider: sideEffectAsyncNotifierProvider(1),
-//             overrides: overrides,
-//             act: (container) => container.read(sideEffectAsyncNotifierProvider(1).notifier).increment(),
-//             verify: (_) => verify(repository.sideEffect).called(2),
-//             tearDown: overrides.clear,
-//           );
-//         } catch (e) {
-//           expect((e as TestFailure).message, expectedError);
-//         }
-//       });
-
-//       test('shows equality warning when strings are identical', () async {
-//         const expectedError =
-//             '''Expected: [\n            AsyncData<ComplexState>:AsyncData<ComplexState>(value: Instance of 'ComplexStateA')\n          ]
-//   Actual: [\n            AsyncData<ComplexState>:AsyncData<ComplexState>(value: Instance of 'ComplexStateA')\n          ]
-//    Which: at location [0] is AsyncData<ComplexState>:<AsyncData<ComplexState>(value: Instance of 'ComplexStateA')> instead of AsyncData<ComplexState>:<AsyncData<ComplexState>(value: Instance of 'ComplexStateA')>\n
-// WARNING: Please ensure state instances extend Equatable, override == and hashCode, or implement Comparable.
-// Alternatively, consider using Matchers in the expect of the testAsyncNotifier rather than concrete state instances.\n''';
-
-//         try {
-//           await asyncNotifierTest<ComplexState>(
-//             provider: complexAsyncNotifierProvider,
-//             act: (container) => container.read(complexAsyncNotifierProvider.notifier).setComplexStateA(),
-//             expect: () => <AsyncValue<ComplexState>>[
-//               AsyncData(ComplexStateA()),
-//             ],
-//           );
-//         } catch (e) {
-//           expect((e as TestFailure).message, expectedError);
-//         }
-//       });
     });
   });
 

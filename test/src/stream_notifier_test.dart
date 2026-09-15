@@ -102,61 +102,6 @@ void main() {
         skip: 1,
         expect: () => <AsyncValue<int>>[const AsyncData(1)],
       );
-
-      // test('fails immediately when expectation is incorrect', () async {
-      //   const expectedError = 'Expected: [AsyncData<int>:AsyncData<int>(value: 2)]\n'
-      //       '  Actual: [AsyncData<int>:AsyncData<int>(value: 1)]\n'
-      //       '   Which: at location [0] is '
-      //       'AsyncData<int>:<AsyncData<int>(value: 1)> instead of '
-      //       'AsyncData<int>:<AsyncData<int>(value: 2)>\n'
-      //       '\n'
-      //       '==== diff ========================================\n'
-      //       '\n'
-      //       '\x1B[90m[AsyncData<int>(value: '
-      //       '\x1B[0m\x1B[31m[-2-]\x1B[0m\x1B[32m{+1+}\x1B[0m\x1B[90m)]\x1B[0m\n'
-      //       '\n'
-      //       '==== end diff ====================================\n';
-      //   try {
-      //     await asyncNotifierTest<int>(
-      //       provider: counterStreamNotifierProvider(0),
-      //       act: (container) => container.read(counterStreamNotifierProvider(0).notifier).increment(),
-      //       expect: () => <AsyncValue<int>>[const AsyncData<int>(2)],
-      //       errors: Exception.new,
-      //     );
-      //   } catch (e) {
-      //     expect((e as TestFailure).message, expectedError);
-      //   }
-      // });
-
-      // test(
-      //   'fails immediately when '
-      //   'uncaught exception occurs within notifier',
-      //   () async {
-      //     try {
-      //       await asyncNotifierTest<int>(
-      //         provider: errorCountStreamNotifierProvider,
-      //         act: (container) => container.read(errorCountStreamNotifierProvider.notifier).increment(),
-      //         expect: () => <AsyncValue<int>>[const AsyncData<int>(1)],
-      //       );
-      //     } catch (e) {
-      //       expect(e, isA<ErrorCounterStreamNotifierError>());
-      //     }
-      //   },
-      // );
-
-      // test('fails immediately when exception occurs in act', () async {
-      //   final exception = Exception('oops');
-
-      //   try {
-      //     await asyncNotifierTest<int>(
-      //       provider: errorCountStreamNotifierProvider,
-      //       act: (_) => throw exception,
-      //       expect: () => [const AsyncData<int>(1)],
-      //     );
-      //   } catch (e) {
-      //     expect(e, equals(exception));
-      //   }
-      // });
     });
 
     group('ErrorBuildStreamNotifier', () {

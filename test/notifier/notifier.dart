@@ -5,6 +5,5 @@ export 'counter_autodispose_notifier.dart';
 export 'counter_family_notifier.dart';
 export 'counter_notifier.dart';
 export 'delayed_counter_notifier.dart';
-export 'error_counter_notifier.dart';
 export 'multi_counter_notifier.dart';
 export 'side_effect_counter_notifier.dart';

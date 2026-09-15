@@ -86,37 +86,6 @@ void main() {
           AsyncError<int>(exception, StackTrace.empty),
         ],
       );
-
-//       test('fails immediately when verify is incorrect', () async {
-//         const expectedError =
-//             '''Expected: <2>\n  Actual: <1>\nUnexpected number of calls\n''';
-//         try {
-//           await providerTest<AsyncValue<int>>(
-//             provider: futureProvider,
-//             overrides: overrides,
-//             verify: () => verify(mockRepository.fetchCounter).called(2),
-//             tearDown: overrides.clear,
-//           );
-//         } catch (e) {
-//           expect((e as TestFailure).message, expectedError);
-//         }
-//       });
-
-//       test('shows equality warning when strings are identical', () async {
-//         const expectedError = '''Expected: [Instance of 'CounterDataSource']
-//   Actual: [Instance of 'CounterDataSource']
-//    Which: at location [0] is <Instance of 'CounterDataSource'> instead of <Instance of 'CounterDataSource'>\n
-// WARNING: Please ensure state instances extend Equatable, override == and hashCode, or implement Comparable.
-// Alternatively, consider using Matchers in the expect of the testProvider rather than concrete state instances.\n''';
-//         try {
-//           await providerTest<CounterDataSource>(
-//             provider: counterDataSourceProvider,
-//             expect: () => <CounterDataSource>[CounterDataSource()],
-//           );
-//         } catch (e) {
-//           expect((e as TestFailure).message, expectedError);
-//         }
-//       });
     });
 
     group('streamProvider', () {
@@ -140,21 +109,5 @@ void main() {
         ],
       );
     });
-
-    // group('familyExceptionProvider', () {
-    //   final exception = Exception('oops');
-
-    //   testProvider<int>(
-    //     'errors supports matchers',
-    //     provider: familyExceptionProvider(exception),
-    //     errors: () => contains(exception),
-    //   );
-
-    //   testProvider<int>(
-    //     'captures uncaught exceptions',
-    //     provider: familyExceptionProvider(exception),
-    //     errors: () => <Matcher>[equals(exception)],
-    //   );
-    // });
   });
 }
